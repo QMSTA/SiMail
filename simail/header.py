@@ -1,8 +1,13 @@
 from collections import defaultdict
 from email.mime.multipart import MIMEMultipart
-
 from .core.base import MailBase, AddrBase
 from typing import List, Literal
+
+__all__ = [
+    "SendAddr",
+    "RecvAddr",
+    "MailHeader"
+]
 
 
 class SendAddr(AddrBase):
@@ -16,8 +21,6 @@ class SendAddr(AddrBase):
     @property
     def authorization(self):
         return self._a_code
-
-    
 
 
 class RecvAddr(AddrBase):
@@ -65,13 +68,17 @@ class MailHeader(MailBase):
         return self._head
 
     @property
-    def recvs(self) -> List[str]:
-        return [r() for r in self._recvs]
-
-    @property
     def recver(self) -> List[RecvAddr]:
         return self._recvs
 
     @property
     def sender(self) -> SendAddr:
         return self._send
+
+    @property
+    def recv_emails(self) -> List[str]:
+        return [r.email for r in self.recver]
+
+    @property
+    def sender_email(self) -> str:
+        return self.sender.email

@@ -2,6 +2,10 @@ from ..content import MailContent, Attachment, Embed, Message
 from ..header import MailHeader, SendAddr, RecvAddr
 from typing import List
 
+__all__ = [
+    "SiMail"
+]
+
 
 class SiMail:
     def __init__(
@@ -22,8 +26,8 @@ class SiMail:
         return self._content.message.as_string()
 
     @classmethod
-    def new_from_header(cls, subject: str, header: MailHeader) -> "SiMail":
-        return cls(subject, header._send, header._recvs)
+    def new_from_header(cls, header: MailHeader) -> "SiMail":
+        return cls(header._subject, header._send, header._recvs)
 
     @property
     def header(self):

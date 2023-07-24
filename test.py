@@ -8,11 +8,10 @@ port = 465
 with SMTPSSLConnect(host, port) as smtp:
     mail = SiMail(
         subject="This is a test email!",
-        sender=SendAddr("qmstar0@qq.com", code, "QMStar"),
-        recv_lis=[RecvAddr("qmstar0@qq.com")]
+        sender=SendAddr("qmstar0@163.com", code, "QMStar"),
+        recv_lis=[RecvAddr("qmstar0@qq.com").type("Bcc")]
     )
     mail.append(
         HTMLMessage.from_file("test.html"),
         FileAttachment("test.jpg")
     )
-    result = smtp.send(mail)

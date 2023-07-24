@@ -54,7 +54,15 @@ class SMTPBase:
             pass
 
     def send(self, mail):
-        sender = mail.header.sender
-        recver = mail.header.recver
-        self._smtp.login(sender.email, sender.authorization)
-        return self._smtp.sendmail(sender.email, [r.email for r in recver], mail.pack())
+        authorization = mail.header.sender.authorization
+        sender = mail.header.sender_email
+        recver = mail.header.recv_emails
+        self._smtp.login(sender, authorization)
+        return self._smtp.sendmail(sender, recver, mail.pack())
+
+    # 废弃功能
+    # def sendmail(self, sender: str, recvs: list[str], mail: str):
+    #     return self._smtp.sendmail(sender, recvs, mail)
+
+    # def login(self, email, authorization):
+    #     return self._smtp.login(email, authorization)
