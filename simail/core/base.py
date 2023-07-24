@@ -1,5 +1,6 @@
 
 from email.utils import formataddr
+from ..exception import SiEmailError
 import smtplib
 
 
@@ -47,11 +48,14 @@ class SMTPBase:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is smtplib.SMTPServerDisconnected:
+            raise SiEmailError(f"{exc_value}; 检查邮箱发送账号和密码/授权码") from None
+
         try:
             self._smtp.quit()
             self._smtp.close()
-        except smtplib.SMTPServerDisconnected:
-            pass
+        except smtplib.SMTPServerDisconnected as exc:
+            raise SiEmailError(f"{exc}; smtp服务未连接") from None
 
     def send(self, mail):
         authorization = mail.header.sender.authorization
