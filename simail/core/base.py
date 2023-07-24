@@ -57,13 +57,15 @@ class SMTPBase:
         except smtplib.SMTPServerDisconnected as exc:
             raise SiEmailError(f"{exc}; smtp服务未连接") from None
 
+    def login(self, sender):
+        self._smtp.login(sender.email, sender.authorization)
+        return self
+
     def send(self, mail):
         authorization = mail.header.sender.authorization
         sender = mail.header.sender_email
         recver = mail.header.recv_emails
-        self._smtp.login(sender, authorization)
         return self._smtp.sendmail(sender, recver, mail.pack())
-
     # 废弃功能
     # def sendmail(self, sender: str, recvs: list[str], mail: str):
     #     return self._smtp.sendmail(sender, recvs, mail)
