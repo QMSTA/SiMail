@@ -1,17 +1,28 @@
 from simail import SiMail, SMTPSSLConnect
-from simail.content import HTMLMessage, FileAttachment
+from simail.content import ImageEmbed, HTMLMessage,  FileAttachment
 from simail.header import SendAddr, RecvAddr
-code = "XXXXXXXXXXXXXXXXX"  # 授权码
+
 host = "smtp.qq.com"
 port = 465
 
+sender = SendAddr("email@xxx", "xxxxxxxxxxxxx")
+
+mail = SiMail(
+    subject="我的测试邮件",
+    sender=sender,
+    recv_lis=[
+        RecvAddr("email@xxx").type("Cc"),
+    ]
+)
+img = ImageEmbed.new_from_file("test.jpg")
+mail.append(
+    img,
+    FileAttachment("test.csv"),
+    HTMLMessage('<img src="{}" />'.format(img))
+
+)
+
 with SMTPSSLConnect(host, port) as smtp:
-    mail = SiMail(
-        subject="This is a test email!",
-        sender=SendAddr("qmstar0@163.com", code, "QMStar"),
-        recv_lis=[RecvAddr("qmstar0@qq.com").type("Bcc")]
-    )
-    mail.append(
-        HTMLMessage.from_file("test.html"),
-        FileAttachment("test.jpg")
-    )
+    result = smtp.login(sender).send(mail)
+
+print(result)

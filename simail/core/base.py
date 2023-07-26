@@ -1,11 +1,11 @@
 
 from email.utils import formataddr
-from ..exception import SiEmailError
+from .. import exception
 import smtplib
 
 
 class ContentBase:
-    sign = "base"
+    _sign = "base"
     mime_type = "*/*"
 
 
@@ -17,7 +17,7 @@ class MailBase:
 
 
 class AddrBase:
-    sign = "base"
+    _sign = "base"
 
     def __init__(
         self,
@@ -49,26 +49,20 @@ class SMTPBase:
 
     def __exit__(self, exc_type, exc_value, traceback):
         if exc_type is smtplib.SMTPServerDisconnected:
-            raise SiEmailError(f"{exc_value}; 检查邮箱发送账号和密码/授权码") from None
+            raise exception.SMTPContentError(f"{exc_value}; 检查邮箱发送账号和密码/授权码") from None
 
         try:
             self._smtp.quit()
             self._smtp.close()
         except smtplib.SMTPServerDisconnected as exc:
-            raise SiEmailError(f"{exc}; smtp服务未连接") from None
+            raise exception.SMTPContentError(f"{exc}; smtp服务未连接") from None
 
     def login(self, sender):
         self._smtp.login(sender.email, sender.authorization)
         return self
 
     def send(self, mail):
-        authorization = mail.header.sender.authorization
         sender = mail.header.sender_email
         recver = mail.header.recv_emails
-        return self._smtp.sendmail(sender, recver, mail.pack())
-    # 废弃功能
-    # def sendmail(self, sender: str, recvs: list[str], mail: str):
-    #     return self._smtp.sendmail(sender, recvs, mail)
-
-    # def login(self, email, authorization):
-    #     return self._smtp.login(email, authorization)
+        mail_pack = mail.pack()
+        return self._smtp.sendmail(sender, recver, mail_pack)

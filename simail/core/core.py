@@ -1,5 +1,5 @@
-from ..content import MailContent, Attachment, Embed, Message
-from ..header import MailHeader, SendAddr, RecvAddr
+from ._content import MailContent, Attachment, Embed, Message
+from ._header import MailHeader, SendAddr, RecvAddr
 from typing import List
 
 __all__ = [
@@ -8,6 +8,18 @@ __all__ = [
 
 
 class SiMail:
+    """
+    SiMail
+
+    开始构建一个邮件
+
+    >>> mail = SiMail(...)
+    >>> mail.append(...)
+    >>> with SMTPSSLConnect(...) as smtp:
+    >>>     smtp.login(...).send(mail)
+    >>> ...
+    """
+
     def __init__(
         self,
         subject: str,
