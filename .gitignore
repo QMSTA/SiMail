@@ -2,3 +2,6 @@
 /.vscode
 __pycache__
 main.py
+/static
+test.txt
+test.html
