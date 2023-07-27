@@ -14,6 +14,7 @@ SiMail
 
 >>> code = "xxxxxxxxxxxx" # 密码/授权码 password/authorization
 >>> sender = SendAddr("email@xxx", code, "QMStar")
+>>> host, port = "smtp.xxxx.com", 465
 >>> mail = SiMail(
 >>>     subject="A test email",
 >>>     sender=sender,
